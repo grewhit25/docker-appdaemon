@@ -1,8 +1,8 @@
 # docker-appdaemon for Raspberry Pi
 
 [![apm](https://img.shields.io/apm/l/vim-mode.svg?style=plastic)](https://github.com/grewhit25/docker-appdaemon/blob/master/LICENSE)
-[![Docker Automated build](https://img.shields.io/docker/automated/grewhit/docker-appdaemon.svg)](https://hub.docker.com/r/grewhit/armhf-appdaemon/)
-[![Docker Build Status](https://img.shields.io/docker/build/grewhit/docker-appdaemon.svg)](https://hub.docker.com/r/grewhit/armhf-appdaemon/)
+[![Docker Automated build](https://img.shields.io/docker/automated/grewhit/armhf-appdaemon.svg)](https://hub.docker.com/r/grewhit/armhf-appdaemon/)
+[![Docker Build Status](https://img.shields.io/docker/build/grewhit/armhf-appdaemon.svg)](https://hub.docker.com/r/grewhit/armhf-appdaemon/)
 
 ## Description
 
@@ -12,5 +12,4 @@ Assistant](https://home-assistant.io/) home automation software. It also provide
 rd)
 suitable for wall mounted tablets.
 
-For full instructions on installation and use check out the [AppDaemon Project Documentation](http://appdaemon.readth
-edocs.io).
+For full instructions on installation and use check out the [AppDaemon Project Documentation](http://appdaemon.readthedocs.io).
