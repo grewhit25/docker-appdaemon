@@ -17,7 +17,7 @@ RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 # COPY . .
 # Download and build appdaemon
-RUN git clone --branch=3.0.1 --recurse-submodules https://github.com/home-assistant/appdaemon.git .
+RUN git clone --branch=3.0.2 --recurse-submodules https://github.com/home-assistant/appdaemon.git .
 
 # Install
 # RUN pip3 install .
