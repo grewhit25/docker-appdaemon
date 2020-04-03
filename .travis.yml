@@ -1,0 +1,31 @@
+sudo: required
+services:
+- docker
+language: shell
+dist: bionic
+arch:
+  - amd64
+  - arm64
+os: linux
+env:
+  global:
+  - TRAVIS_SECURE_ENV_VARS=true
+  - TAGS='latest'
+  - secure: Q8IKB2BqPh9g50zVnB3f4WRzxjVXPRcQNZG7rGwF/xbaqHyxyTgY1/01VI2mnE2O1+bQKtAQlNHR7KqCahFvjpKUFT0qTvV5kQdsk64vNI1XQr6dB48vJ7QaYzNYk6O3YNFtUXxEKXl39GxWh9gpB8jH+HmZV+I44KyuxlIGBQy0QCaVj+yIRbGVXGdGTQFRyJqf0BNbfLxiOjCSLhFo2b3XBbYfcYr9a3vCGPJaYAJS8l0ytnNRoVcmZvs0xBB0ziMOHlnJFnUmJ3wbPj2P3sh4EA0qatFFFyPibsmZtGLlXDWZun8z9+MsCfmgJnlpIPnPdzwohT8nUQzzX5S3BlGOBQHyqc9/cJGOsLQLhBLirNHhvoWMUw9UL7LDs4OGuDEha0kQmRi3whkhAauX6yKVfoKn7IMeuw5pYiUl+0smmnVN9LtYVrdyJeC5MpWr7+3YnnZs2MjjjzfmUvP9cruWNL+oQvjW6iSNCOVup4PcdXuUqQQFKAH2KGfEkNcmS0xdt+/VwGBUzyVGFSDvd9m9N8EVgCQaPr4aCJk8oMfYFg42WPg1Ba6XQX29kRLJWeDJE0kEPkH+kpUp/cDcmkAfQT61gFaQlsF+56oRskvluAfI05HC8eNwfC9m6PoMSXC/5gLBrFLy3ICW2c8ij/7pxXHK8HNnkHOfendt3Is=
+  - secure: KF54vC8pfeX/4lExl53gRwfPEXmFoHv0tT97M7q7EYq0GGBUZuyeUmybY6MTLWnHRz8eF2cNy5Tqjsry/vwTgoybVLLiMcqWI/+2ObtPd5iNVjBK2Dq2YP6hgfArfqenRJjGBSAh9igu5bCRGEkL8g1jaSqIwu0Xdyj9Z56M4+SDqoj/Zhnkw3nc8d/S6ltusWqgyb3cPRlfqcHIJIxeU1ud+d6+1+fhaRikeu3btKxxsPznq2HukC6f70KneRZO951T7Io5TOigIz5qogBaCemm9/GG4ePIk7FHOX5N8K4wfHzr6J9A+OmL/047BeYsDm3xryuJq5bpZkLRRPsnVW7ZHnapf7FhDorrIi94LqHiHMmNqEBDKKjwNzOcnuRLq9cQS5pOjQIqPtlMspKSOmYmN76ev3bqdvL1twJGIqhwpauc9Tr6x02vYL6uQ7APoubaNERI3mGDptmyIC91ibfhLdRqR0NHbPJpI8g4hyNKtGVaAY/qa+8F9WWrT59XJdffqMXq6aCfmZN5IV4hbi5f1BPuFnoOevanBxqUdWQOl5T7wqh5y/X40LCLWHLRPWl/Pj1lHw8413tm5/c06+42ptf087n5jcpJ79pUeQkICIX9K++1c7pnB7m21+D5cI2ZIMEJEmTnuq87i90TxsFaPtSmHThqkhuM06MEM/4=
+  - secure: EYEjSF+17G9YzRm/0FN6yWDpiOeij8kmke0DtxASNknvZ1yySlgDjFoqOSeeBnURn5VfbAeKgz7kM1GjhkYFY6RQpHJBiY3hGJaOEqEeEKgQjA32z0mt6PmGX0NuiLFclRJEfYM3/vXvVzQKnsCHrlqSOu5id1nAkf4SDw9dmc6f/T5XnJ5bnKhK9ZmY6KRDjtaKX6pggEmctXeBRiyMokYlmwGShWqjIp9DoWwF7iFNZC5+qhH8DiDkVUwu7VvDxKQpL2FF2MHPucvz9t5gUbBNao9OT8BqgLte7xbPDL7AlFv/quqvT+5QTGNMLt84XupDBZC8QuWOxfYdDfS0bqGbN9007pWas9aCeas87hgF4E3r7BkPUFzNMWgMgNmOiZN6OHhFrCIt3cF5wibPyw8Kbqf1TuJN2HpMHyt8lNSJL74EKbfugq946oS5bAjto0T6IPfrFdPtSw9gvFzpFpGhAcZ5AI93CUpwhDB/xr8fxpesGsPM7O8luifTn2LYFafyHRrb5Df2IG40Aax3SNT2U0WiENCU51YU3B4luFDk6dPi3fQZBA5VvnTWwVZyc+0iDvsqmMaOBCI/TwNszYHgKW7rm+0dkQTdL334wlw8Nf4yiTdBfKYW+pE8n1YYY4ED9yQYZqDcuYY+UPRc8z68Rk5CyfRnZXjz7EUNwmQ=
+# Install build environment
+install:
+  - source ./buildx_ci_images.sh
+  - set -ex; setup_ci_environment::main; set +x
+jobs:
+  fast_finish: true
+  include:
+  - stage: Deploy docker image
+    env:
+      - DOCKER_PLATFORMS='linux/amd64 linux/arm64 linux/arm/v7'
+      - DOCKER_BASE=${DOCKER_REGISTRY}'/'${TRAVIS_REPO_SLUG#*/}
+    script:
+      - source ./buildx_ci_images.sh
+      - while sleep 300; do echo "still alive"; done &
+      - set -ex; build_ci_images::main; set +x

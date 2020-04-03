@@ -1,9 +1,5 @@
-FROM resin/raspberrypi3-alpine-python:3.6
-RUN apk add -U
-
-VOLUME /conf
-VOLUME /certs
-EXPOSE 5050
+FROM python:alpine
+#FROM python:3.7-alpine
 
 # Environment vars we can configure against
 # But these are optional, so we won't define them now
@@ -12,17 +8,32 @@ EXPOSE 5050
 #ENV DASH_URL http://hass:5050
 #ENV EXTRA_CMD -D DEBUG
 
+# API Port
+EXPOSE 5050
+
+# Mountpoints for configuration & certificates
+VOLUME /conf
+VOLUME /certs
+
 # Copy appdaemon into image
-RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 # COPY . .
+
+# Install timezone data
+RUN apk -U upgrade -a && \
+    apk add --no-cache git tzdata && \
 # Download and build appdaemon
-RUN git clone --branch=3.0.2 --recurse-submodules https://github.com/home-assistant/appdaemon.git .
+    git clone --branch=dev --recurse-submodules https://github.com/home-assistant/appdaemon.git . && \
+# Fix for current dev branch
+    pip3  install --no-cache-dir python-dateutil requests
 
-# Install
-# RUN pip3 install .
-RUN pip3 install requests && pip install --upgrade pip .
+# Install dependencies
+RUN apk add --no-cache --virtual build-dependencies gcc openssl-dev libffi-dev musl-dev \
+    && pip3 install --no-cache-dir . \
+    && apk del build-dependencies
 
+# Install additional packages
+RUN apk add --no-cache curl && \
 # Start script
-RUN chmod +x /usr/src/app/dockerStart.sh
-CMD [ "./dockerStart.sh" ]
+    chmod +x /usr/src/app/dockerStart.sh
+ENTRYPOINT ["./dockerStart.sh"]
