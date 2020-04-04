@@ -132,6 +132,8 @@ function setup_ci_environment::main() {
 # Build images
 function build_ci_images::main() {
   # Set platforms to build.
+  export DOCKER_BASE=${DOCKER_REGISTRY}/${TRAVIS_REPO_SLUG#*/}
+  echo ${DOCKER_SLUG}
   build_ci_images::build_and_push_all
   build_ci_images::test_all
 }
